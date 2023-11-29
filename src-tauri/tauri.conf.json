@@ -1,0 +1,63 @@
+{
+	"build": {
+		"beforeBuildCommand": "npm run build",
+		"beforeDevCommand": "npm run dev",
+		"devPath": "http://localhost:3000/todo",
+		"distDir": "../"
+	},
+	"package": {
+		"productName": "todo-app",
+		"version": "0.1.0"
+	},
+	"tauri": {
+		"allowlist": {
+			"all": false
+		},
+		"bundle": {
+			"active": true,
+			"category": "DeveloperTool",
+			"copyright": "",
+			"deb": {
+				"depends": []
+			},
+			"externalBin": [],
+			"icon": [
+				"../public/favicon-32x32.png",
+				"../public/favicon-16x16.png",
+				"../public/favicon.ico"
+			],
+			"identifier": "com.tauri.dev",
+			"longDescription": "",
+			"macOS": {
+				"entitlements": null,
+				"exceptionDomain": "",
+				"frameworks": [],
+				"providerShortName": null,
+				"signingIdentity": null
+			},
+			"resources": [],
+			"shortDescription": "",
+			"targets": "all",
+			"windows": {
+				"certificateThumbprint": null,
+				"digestAlgorithm": "sha256",
+				"timestampUrl": ""
+			}
+		},
+		"security": {
+			"csp": null
+		},
+		"updater": {
+			"active": false
+		},
+		"windows": [
+			{
+				"fullscreen": false,
+				"height": 600,
+				"resizable": true,
+				"title": "ToDojo",
+				"width": 800
+			}
+		]
+	}
+}
