@@ -47,12 +47,9 @@ export default function MonthlyCalendarDay({
 					} aspect-square p-2 header rounded-sm flex flex-col ${textColor} text-xs md:text-sm overflow-y-auto`}>
 					<div className='flex flex-row justify-between items-center pb-2'>
 						<span className='pb-2'>{day}</span>
-						{isToday && (
-							<span className='text-[10px] px-2 bg-zinc-800 text-white rounded-full subtext'>
-								TODAY
-							</span>
-						)}
+						{isToday && <span className='pb-2 subtext text-[12px]'>TODAY</span>}
 					</div>
+					{/* HARDCODED 4 NOW */}
 					{day === 12 && (
 						<div className='flex flex-col space-y-5'>
 							<MonthlyCalendarGridCategory
@@ -79,6 +76,7 @@ export default function MonthlyCalendarDay({
 					)}
 				</div>
 			)}
+
 			{/* FOR THE MINICALENDAR COMPONENT */}
 			{interactable && (
 				<div
@@ -96,8 +94,8 @@ export default function MonthlyCalendarDay({
 							? COLORS.blue[400]
 							: '',
 					}}
-					className={`p-[0.35rem] select-none transition-all duration-300 ${
-						previousMonth ? 'bg-zinc-500 text-zinc-700 hover:cursor-not-allowed' : 'bg-white'
+					className={`p-[0.35rem] select-none ${
+						previousMonth ? 'bg-transparent text-zinc-700 hover:cursor-not-allowed' : 'bg-white'
 					} ${
 						day < new Date().getDate() &&
 						currentDate.getMonth() == new Date().getMonth() &&
@@ -109,7 +107,7 @@ export default function MonthlyCalendarDay({
 					} ${
 						selectedDay === day && !previousMonth ? 'scale-105' : ''
 					} aspect-square items-center flex justify-center p-1 header rounded-sm ${textColor} text-sm`}>
-					{day}
+					{previousMonth ? '' : day}
 				</div>
 			)}
 		</>

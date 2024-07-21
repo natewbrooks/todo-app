@@ -4,6 +4,33 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  /* Set the background color */
+  background-color: #e4e4e7;
+
+  /* Apply the background image */
+  background-image: url(../public/textures/tic-tac-toe.webp);
+
+  /* Ensure the image repeats seamlessly */
+  background-repeat: repeat;
+
+  /* Set the initial background position */
+  background-position: 0% 0%;
+
+  /* Create an infinite scroll animation */
+  animation: scrollBackground 100s linear infinite;
+}
+
+/* Define the keyframes for the scrolling animation */
+@keyframes scrollBackground {
+  from {
+    background-position: 0% 0%;
+  }
+
+  to {
+    background-position: 100% 0%;
+  }
+}
 
 h3 {
   font-family: 'Mooli', sans-serif;

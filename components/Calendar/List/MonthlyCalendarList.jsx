@@ -87,9 +87,9 @@ export default function MonthlyCalendarList({
 	return (
 		<div
 			id={'layoutContainer'}
-			className='flex flex-col lg:h-full items-center justify-center border-y-2 border-l-2 border-zinc-200 w-full h-full overflow-y-auto'>
+			className='flex flex-col lg:h-full items-center justify-center rounded-md border-2 border-zinc-200 w-full h-full overflow-y-auto'>
 			<div
-				className={`grid grid-cols-1 gap-[0.15rem] ${bgColor} w-full h-full pb-[0.15rem]'
+				className={`grid grid-cols-1 ${bgColor} w-full h-full pb-[0.15rem]'
 					} items-center justify-center`}>
 				{daysArray.map((day, index) => (
 					<MonthlyCalendarListDay

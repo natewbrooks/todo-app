@@ -177,21 +177,9 @@ export default function Calendar() {
 				<SelectActionModal selectModalActive={setSelectActionModalActive} />
 			)}
 			<div
-				onClick={() => setSelectActionModalActive(true)}
-				className='block xl:hidden z-10 drop-shadow-md hover:cursor-pointer hover:scale-110 active:scale-90 absolute right-4 bottom-4 rounded-full p-5 bg-zinc-800 transition-all duration-300'>
-				<svg
-					xmlns='http://www.w3.org/2000/svg'
-					width='14'
-					height='14'
-					fill='white'
-					viewBox='0 0 24 24'>
-					<path d='M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z' />
-				</svg>
-			</div>
-			<div
 				className={`${
 					selectActionModalActive ? 'blur' : 'blur-none'
-				}   relative flex flex-col w-full justify-center items-center h-full border-zinc-200 transition-all duration-300`}>
+				}   relative flex flex-col w-full justify-center items-center h-full transition-all duration-300`}>
 				{/* HEADER */}
 				<div className='relative flex flex-row space-x-5 w-full h-fit py-2 justify-center'>
 					<button onClick={() => handleMonthChange('left')}>
@@ -243,18 +231,18 @@ export default function Calendar() {
 					setLayoutManually={setLayoutManually}
 				/>
 
-				<div className='xl:flex flex-col space-y-2 items-center justify-center hidden'>
-					{/* <div className='line rounded-sm border-zinc-300 border-t-2 w-[15%]'></div> */}
+				{/* <div className='xl:flex flex-col space-y-2 items-center justify-center hidden'>
+					<div className='line rounded-sm border-zinc-300 border-t-2 w-[15%]'></div>
 					<div>
 						<CalendarTaskbar
 							isSelectModalActive={selectActionModalActive}
 							selectAction={setSelectActionModalActive}
 						/>
 					</div>
-					{/* <div className='line rounded-sm border-zinc-300 border-t-2 w-[30%]'></div> */}
-				</div>
+					<div className='line rounded-sm border-zinc-300 border-t-2 w-[30%]'></div>
+				</div> */}
 
-				<div className='flex w-full h-full pb-10 lg:pb-20 overflow-auto'>
+				<div className='flex w-full h-full pb-4 px-2 overflow-auto'>
 					{layout == 'grid' && (
 						<MonthlyCalendarGrid
 							previousMonthsDays={previousMonthsDays}

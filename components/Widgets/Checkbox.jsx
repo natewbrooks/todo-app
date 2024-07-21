@@ -4,13 +4,18 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import COLORS from '@/constants/colors';
 
-export default function Checkbox({ size, color, checked }) {
+export default function Checkbox({ size, color, checked, clickHandler }) {
 	const [isChecked, setIsChecked] = useState(checked);
 
 	return (
 		<AnimatePresence>
 			<div
-				onClick={() => setIsChecked(!isChecked)}
+				onClick={() => {
+					setIsChecked(!isChecked);
+					if (clickHandler) {
+						clickHandler();
+					}
+				}}
 				style={{ borderColor: 'border-' + color }}
 				className={`group aspect-square p-[0.15rem] h-fit w-fit flex items-center justify-center border-[2.5px] border-zinc-800/20 bg-transparent rounded-md hover:cursor-pointer`}>
 				<motion.svg

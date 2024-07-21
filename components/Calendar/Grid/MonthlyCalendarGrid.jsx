@@ -50,7 +50,7 @@ export default function MonthlyCalendarGrid({
 			{/* Header */}
 
 			{!interactable && (
-				<div className='mt-4 grid grid-cols-7 w-full h-fit text-center rounded-md border-b-2 border-zinc-200'>
+				<div className='mt-2 grid grid-cols-7 w-full h-fit text-center rounded-md'>
 					{/* Day Labels */}
 					{daysOfWeek.map((day, index) => (
 						<span
@@ -63,9 +63,9 @@ export default function MonthlyCalendarGrid({
 			)}
 			<div
 				id={'layoutContainer'}
-				className='w-full h-fit overflow-y-auto border-zinc-300 justify-center flex'>
+				className='w-full h-fit overflow-y-auto border-zinc-300 border-2 rounded-md justify-center flex'>
 				<div
-					className={`grid grid-cols-7 gap-[0.15rem] ${bgColor}  h-fit px-[0.15rem] ${
+					className={`grid grid-cols-7 gap-[0.15rem] ${bgColor}  h-fit ${
 						interactable ? 'py-[0.15rem] w-fit' : 'w-full'
 					} items-center justify-center ${interactable ? 'rounded-md' : ''}`}>
 					{/* Render the grid of days from the previous month */}

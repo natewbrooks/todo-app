@@ -1,119 +1,128 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BiSolidDownArrow } from 'react-icons/bi';
 import TodoTask from '@/components/Todo/TodoTask';
+import { motion, AnimatePresence } from 'framer-motion';
 
-export default function TodoCategory({ index, name, assignDate, dueDate, completedDate }) {
-	const [isCompleteShown, setComplete] = useState(completedDate != null);
-	const [isIncompleteShown, setIncomplete] = useState(true);
-	const [isCategoryCollapsed, setCategoryCollapsed] = useState(false);
+const variants = {
+	open: { height: 'auto' },
+	collapsed: { height: 0 },
+};
+
+export default function TodoCategory({
+	index,
+	name,
+	tasks = [],
+	bgColor = 'bg-red-300',
+	outlineColor = 'border-red-300',
+	taskSort,
+}) {
+	const [isCompleteShown, setComplete] = useState(false);
+	const [sortedTasks, setSortedTasks] = useState([]);
+	const [visible, setVisible] = useState(true);
+
+	useEffect(() => {
+		sortTasks();
+	}, [taskSort, tasks]);
+
+	const sortTasks = () => {
+		const sorted = [...tasks].sort((a, b) => {
+			if (a.completedDate && !b.completedDate) return 1;
+			if (!a.completedDate && b.completedDate) return -1;
+
+			switch (taskSort) {
+				case 'alphabetical':
+					return a.name.localeCompare(b.name);
+				case 'priority':
+					return b.priority - a.priority;
+				case 'dueDate':
+					return new Date(a.dueDate) - new Date(b.dueDate);
+				case 'priorityAlphabetical':
+					if (a.priority === b.priority) {
+						return a.name.localeCompare(b.name);
+					}
+					return b.priority - a.priority;
+				case 'priorityDate':
+					if (a.priority === b.priority) {
+						return new Date(a.dueDate) - new Date(b.dueDate);
+					}
+					return b.priority - a.priority;
+				default:
+					return 0;
+			}
+		});
+		setSortedTasks(sorted);
+	};
+
+	const countCompletedTasks = () => {
+		return tasks.filter((task) => task.completedDate).length;
+	};
 
 	return (
-		<div className='flex flex-col px-5 pt-5'>
+		<motion.div className='w-full flex items-center flex-col px-2'>
 			<div
-				onClick={() => setCategoryCollapsed(!isCategoryCollapsed)}
-				className='flex space-x-2 items-center hover:cursor-pointer'>
-				<div className='flex space-x-1 items-center w-full'>
-					<h2 className='text-zinc-800 header text-[20px] whitespace-nowrap'>{name}</h2>
-					<div className='rounded-sm bg-zinc-700 h-[1px] w-[100%]'></div>
-
-					<BiSolidDownArrow
-						fill='black'
-						size={8}
-						className={`${
-							isCategoryCollapsed ? 'rotate-180' : 'rotate-0'
-						} transition-all duration-300`}
-					/>
-				</div>
+				className={`transition-all duration-300 overflow-hidden flex w-full p-1 flex-col rounded-md`}>
+				<motion.div
+					className={`relative flex flex-col mb-4 text-zinc-800 w-full border-2 rounded-md overflow-hidden ${outlineColor} ${bgColor}`}>
+					<div
+						onClick={() => setVisible(!visible)}
+						className={`flex flex-col w-full px-4 py-1 hover:cursor-pointer ${bgColor}`}>
+						<div className={`flex w-full items-center justify-between`}>
+							<div className={`flex flex-col -space-y-1 translate-y-[0.15rem]`}>
+								<div className='header-bold text-[18px] w-fit whitespace-nowrap text-black'>
+									{name}
+								</div>
+								<div className={`flex space-x-1 h-fit`}>
+									<div className='subtext text-[12px] w-fit whitespace-nowrap text-black'>
+										{tasks.length} tasks due
+									</div>
+									<span className={`-translate-y-[0.2rem] scale-[80%] text-zinc-800`}>•</span>
+									<div className='subtext text-[12px] w-fit whitespace-nowrap text-black'>
+										{countCompletedTasks()} tasks completed
+									</div>
+								</div>
+							</div>
+							<BiSolidDownArrow
+								fill='black'
+								size={10}
+								className={`relative ${
+									visible ? 'rotate-0' : 'rotate-180'
+								} transition-all duration-300`}
+							/>
+						</div>
+					</div>
+					<AnimatePresence initial={false}>
+						{visible && (
+							<motion.div
+								initial='collapsed'
+								animate='open'
+								exit='collapsed'
+								variants={variants}
+								transition={{ duration: 0.5 }}
+								style={{ position: 'relative', zIndex: 1 }}
+								className={`flex flex-col overflow-hidden`}>
+								{sortedTasks.map((task, idx) => (
+									<TodoTask
+										key={idx}
+										index={idx + 1}
+										bgColor={bgColor}
+										name={task.name}
+										description={task.description}
+										priority={task.priority}
+										assignDate={task.assignDate}
+										dueDate={task.dueDate}
+										dueTime={task.dueTime}
+										completedDate={task.completedDate}
+										weekly={task.weekly}
+										category={task.category}
+										subtasks={task.subtasks}
+										onTaskCompletion={() => sortTasks()} // Update the tasks list when a task is completed
+									/>
+								))}
+							</motion.div>
+						)}
+					</AnimatePresence>
+				</motion.div>
 			</div>
-			<div
-				className={`${
-					isCategoryCollapsed ? 'max-h-0' : 'max-h-[100%]'
-				} transition-all duration-300 overflow-hidden flex flex-col`}>
-				<div className={`flex flex-col text-zinc-800 lg:px-4 py-1 space-y-2`}>
-					<div
-						onClick={() => setIncomplete(!isIncompleteShown)}
-						className='flex space-x-1 items-center hover:cursor-pointer'>
-						<span className='subtext text-[8px]'>INCOMPLETE</span>
-						<div className='rounded-sm bg-zinc-700/30 h-[1px] w-[100%]'></div>
-						<BiSolidDownArrow
-							fill='black'
-							size={6}
-							className={`relative ${
-								isIncompleteShown ? 'rotate-0' : 'rotate-180'
-							} transition-all duration-300`}
-						/>
-					</div>
-					<div
-						className={`flex flex-col ${
-							isIncompleteShown ? 'h-full' : 'h-0'
-						} transition-all duration-300 overflow-hidden `}>
-						<TodoTask
-							index={1}
-							name='Computer Science Assignment'
-							assignDate={'Sept. 27'}
-							dueDate={'Nov. 5'}
-							completedDate={null}
-						/>
-						<TodoTask
-							index={2}
-							name='Computer Science Assignment'
-							assignDate={'Sept. 27'}
-							dueDate={'Nov. 9'}
-							completedDate={null}
-						/>
-						<TodoTask
-							index={3}
-							name='Computer Science Assignment'
-							assignDate={'Sept. 27'}
-							dueDate={'Nov. 15'}
-							completedDate={null}
-						/>
-					</div>
-				</div>
-				{/* COLLAPSED BY DEFAULT ALWAYS */}
-				<div className='flex flex-col text-zinc-800 lg:px-4 py-1 space-y-2'>
-					<div
-						onClick={() => setComplete(!isCompleteShown)}
-						className='flex space-x-1 items-center hover:cursor-pointer'>
-						<span className='subtext text-[8px]'>COMPLETED</span>
-						<div className='rounded-sm bg-zinc-700/30 h-[1px] w-[100%]'></div>
-						<BiSolidDownArrow
-							fill='black'
-							size={6}
-							className={`relative ${
-								isCompleteShown ? 'rotate-0' : 'rotate-180'
-							} transition-all duration-300`}
-						/>
-					</div>
-					<div
-						className={`flex flex-col ${
-							isCompleteShown ? 'h-full' : 'h-0'
-						} transition-all duration-300 overflow-hidden `}>
-						<TodoTask
-							index={1}
-							name='Computer Science Assignment'
-							assignDate={'Sept. 27'}
-							dueDate={'Nov. 15'}
-							completedDate={'Nov. 3'}
-						/>
-						<TodoTask
-							index={2}
-							name='Computer Science Exam'
-							assignDate={'Sept. 27'}
-							dueDate={'Nov. 15'}
-							completedDate={'Nov. 3'}
-						/>
-						<TodoTask
-							index={3}
-							name='Computer Science Quiz'
-							assignDate={'Sept. 27'}
-							dueDate={'Nov. 3'}
-							completedDate={'Nov. 4'}
-						/>
-					</div>
-				</div>
-			</div>
-		</div>
+		</motion.div>
 	);
 }

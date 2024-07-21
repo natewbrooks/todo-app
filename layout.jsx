@@ -1,8 +1,10 @@
 import Navbar from './components/Navbar';
 import { useRef, useEffect, useState, useCallback } from 'react';
+import Topbar from './components/Topbar';
 
 export default function Layout({ children }) {
 	const navRef = useRef(null);
+	const topbarRef = useRef(null);
 	const [sectionDimensions, setSectionDimensions] = useState([0, 0]);
 	const [isMobileDevice, setMobileDevice] = useState(false);
 
@@ -11,13 +13,17 @@ export default function Layout({ children }) {
 		const width = window.innerWidth;
 		setMobileDevice(width <= 1024);
 
-		if (navRef.current != null) {
+		if (navRef.current != null && topbarRef.current != null) {
 			const navHeight = navRef.current.offsetHeight;
 			const navWidth = navRef.current.offsetWidth;
+			const topbarHeight = topbarRef.current.offsetHeight;
+
 			// Set dimensions based on updated state
 			setSectionDimensions([
 				width <= 1024 ? window.innerWidth : window.innerWidth - navWidth,
-				width <= 1024 ? window.innerHeight - navHeight : window.innerHeight,
+				width <= 1024
+					? window.innerHeight - navHeight - topbarHeight
+					: window.innerHeight - topbarHeight,
 			]);
 		}
 	}, []);
@@ -37,12 +43,15 @@ export default function Layout({ children }) {
 	return (
 		<div className={`w-full h-full flex ${isMobileDevice ? 'flex-col' : 'flex-row'}`}>
 			{!isMobileDevice && <Navbar navRef={navRef} />}
-			<div
-				style={{ width: sectionDimensions[0], height: sectionDimensions[1] }}
-				className={`h-full xs:w-fit lg:w-full flex flex-row`}>
-				{children}
+			<div className={`flex flex-col`}>
+				<Topbar topbarRef={topbarRef} />
+				<div
+					style={{ width: sectionDimensions[0], height: sectionDimensions[1] }}
+					className={`h-full xs:w-fit lg:w-full flex flex-row`}>
+					{children}
+				</div>
+				{isMobileDevice && <Navbar navRef={navRef} />}
 			</div>
-			{isMobileDevice && <Navbar navRef={navRef} />}
 		</div>
 	);
 }

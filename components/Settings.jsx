@@ -7,9 +7,9 @@ export default function Settings({ isSettingsVisible, setSettingsVisible }) {
 	return (
 		<section className={``}>
 			<div
-				className={`hidden lg:flex origin-left transition-all duration-500 ease-in-out z-10 drop-shadow-md ${
-					isSettingsVisible ? ' border-r-2 ' : '-translate-x-[100%] border-x-0'
-				} absolute border-zinc-900 flex-col items-center bg-zinc-800 h-full py-5`}>
+				className={`hidden lg:flex transition-all duration-500 ease-in-out z-10 drop-shadow-md ${
+					isSettingsVisible ? ' border-r-2' : 'translate-x-[100%] border-x-0'
+				} absolute border-zinc-900 flex-col right-0 items-center bg-zinc-800 h-full py-5`}>
 				<div className=' w-[20rem] h-full flex flex-col space-y-4 text-center'>
 					<div className='flex flex-col space-y-2 items-center w-full'>
 						<h2>Settings</h2>
@@ -88,7 +88,7 @@ export default function Settings({ isSettingsVisible, setSettingsVisible }) {
 			<div
 				className={`${
 					isSettingsVisible ? 'opacity-100 z-50' : 'opacity-0 -z-10'
-				} lg:hidden transition-all duration-300 absolute top-0 border-zinc-900 flex flex-col items-center bg-zinc-800 h-[91%] w-full py-5`}>
+				} lg:hidden transition-all duration-300 absolute top-[2.65rem] border-zinc-900 flex flex-col items-center bg-zinc-800 h-[91%] w-full py-5`}>
 				<div className='relative w-[20rem] h-full flex flex-col space-y-4 text-center'>
 					<div className='flex flex-col space-y-2 items-center w-full'>
 						<h2>Settings</h2>
