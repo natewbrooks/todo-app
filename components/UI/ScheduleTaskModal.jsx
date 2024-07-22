@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { FaXmark } from 'react-icons/fa6';
 import { BiSolidDownArrow } from 'react-icons/bi';
-import COLORS from '../constants/colors';
-import DateComponent from './TaskModal/DateComponent';
-import SubtasksComponent from './TaskModal/SubtasksComponent';
-import ColorPickerComponent from './TaskModal/ColorPickerComponent';
+import COLORS from '../../constants/colors';
+import DateComponent from '../TaskModal/DateComponent';
+import SubtasksComponent from '../TaskModal/SubtasksComponent';
+import ColorPickerComponent from '../TaskModal/ColorPickerComponent';
 
 export default function ScheduleTaskModal({ selectAction }) {
 	const colors = [];

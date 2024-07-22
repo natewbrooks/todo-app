@@ -3,17 +3,34 @@ import { BiSolidStar, BiSolidDownArrow } from 'react-icons/bi';
 import { FaEdit, FaPlus } from 'react-icons/fa';
 import Checkbox from '../Widgets/Checkbox';
 import TodoSubtask from './TodoSubtask';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
 
 const variants = {
-	open: { opacity: 1, height: 'auto' },
-	collapsed: { opacity: 1, height: 0 },
+	open: { height: 'auto' },
+	collapsed: { height: 0 },
 };
 
 const getDayOfWeek = (dateStr) => {
 	const [year, month, day] = dateStr.split('/').map((num) => parseInt(num, 10));
 	const date = new Date(year, month - 1, day); // Adjust for zero-based month index
 	return date.toLocaleDateString('en-US', { weekday: 'long' });
+};
+
+const formatAMPM = (date) => {
+	let hours = date.getHours();
+	const minutes = date.getMinutes();
+	const ampm = hours >= 12 ? 'PM' : 'AM';
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	const strTime = `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+	return strTime;
+};
+
+const formatDate = (date) => {
+	const year = date.getFullYear().toString().slice(2);
+	const month = (date.getMonth() + 1).toString().padStart(2, '0');
+	const day = date.getDate().toString().padStart(2, '0');
+	return `${month}/${day}/${year}`;
 };
 
 export default function TodoTask({
@@ -30,7 +47,8 @@ export default function TodoTask({
 	onTaskCompletion,
 }) {
 	const [isComplete, setComplete] = useState(false);
-	const [completeDate, setCompleteDate] = useState();
+	const [completeDate, setCompleteDate] = useState(null);
+	const [completeTime, setCompleteTime] = useState(null);
 	const [subtasksVisible, setSubtasksVisible] = useState(subtasks.length > 1);
 	const [subtaskStates, setSubtaskStates] = useState(subtasks);
 
@@ -38,19 +56,17 @@ export default function TodoTask({
 		setSubtaskStates(subtasks);
 	}, [subtasks]);
 
-	const backgroundColor = getBackgroundColor(index, isComplete);
-
 	const setCompleted = () => {
 		setComplete(!isComplete);
 		if (!isComplete) {
 			const currentDate = new Date();
-			setCompleteDate(
-				`${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear()}`
-			);
+			setCompleteDate(formatDate(currentDate));
+			setCompleteTime(formatAMPM(currentDate));
 			setSubtasksVisible(false);
 		} else {
 			setSubtasksVisible(true);
 			setCompleteDate(null);
+			setCompleteTime(null);
 		}
 		onTaskCompletion(); // Notify parent component of task completion
 	};
@@ -67,14 +83,13 @@ export default function TodoTask({
 
 	const dayDue = getDayOfWeek(dueDate);
 	const dayAssigned = getDayOfWeek(assignDate);
-	const formattedDueDate = dueDate.slice(0, 5); // Removes the year part
-	const formattedAssignDate = assignDate.slice(0, 5);
+	const dayComplete = completeDate ? getDayOfWeek(completeDate) : '';
 
 	return (
 		<div
 			className={`relative w-full space-y-2 flex flex-col justify-between px-2 lg:px-5 py-3 items-center transition-all duration-300 ${
 				isComplete
-					? index % 2 == 0
+					? index % 2 === 0
 						? 'bg-opacity-90 bg-green-300'
 						: 'bg-opacity-90 bg-green-200'
 					: index % 2 === 0
@@ -96,18 +111,41 @@ export default function TodoTask({
 				<div className={`${isComplete ? 'opacity-50' : ''} flex w-full h-full justify-between`}>
 					<div className={`flex flex-col space-y-1 w-full h-full`}>
 						<div className={`w-full flex justify-between`}>
-							<div className={`flex items-center w-fit whitespace-nowrap space-x-1`}>
-								<span
-									className={`font-bold text-zinc-800 text-[10px]`}>{`DUE ${dayDue.toUpperCase()} @ ${dueTime}`}</span>
-								<span className={`-translate-y-[0.05rem] scale-[80%] text-zinc-800`}>•</span>
-								<span className={`font-bold text-zinc-800 text-[10px]`}>{formattedDueDate}</span>
+							<div className={`flex flex-col -space-y-2`}>
+								<AnimatePresence>
+									{isComplete ? (
+										<motion.div
+											initial={{ opacity: 0 }}
+											animate={{ opacity: 1 }}
+											exit={{ opacity: 0 }}
+											transition={{ duration: 0.2 }}>
+											<div className={`flex items-center w-fit whitespace-nowrap space-x-1`}>
+												<span
+													className={`font-bold text-zinc-800 text-[10px]`}>{`COMPLETED ${dayComplete.toUpperCase()} @ ${completeTime}`}</span>
+												<span className={`-translate-y-[0.05rem] scale-[80%] text-zinc-800`}>
+													•
+												</span>
+												<span className={`font-bold text-zinc-800 text-[10px]`}>
+													{completeDate}
+												</span>
+											</div>
+										</motion.div>
+									) : (
+										<div className={`flex items-center w-fit whitespace-nowrap space-x-1`}>
+											<span
+												className={`font-bold text-zinc-800 text-[10px]`}>{`DUE ${dayDue.toUpperCase()} @ ${dueTime}`}</span>
+											<span className={`-translate-y-[0.05rem] scale-[80%] text-zinc-800`}>•</span>
+											<span className={`font-bold text-zinc-800 text-[10px]`}>{dueDate}</span>
+										</div>
+									)}
+								</AnimatePresence>
 							</div>
 							<div
 								className={`hidden xs:flex items-center w-fit whitespace-nowrap space-x-1 opacity-30`}>
 								<span
 									className={`font-bold text-zinc-800 text-[10px]`}>{`ASSIGNED ${dayAssigned.toUpperCase()}`}</span>
 								<span className={`-translate-y-[0.05rem] scale-[80%] text-zinc-800`}>•</span>
-								<span className={`font-bold text-zinc-800 text-[10px]`}>{formattedAssignDate}</span>
+								<span className={`font-bold text-zinc-800 text-[10px]`}>{assignDate}</span>
 								<span className={`-translate-y-[0.05rem] scale-[80%] text-zinc-800`}>•</span>
 								<div
 									className={`w-fit items-center h-full space-x-[0.15rem] flex active:scale-90 cursor-pointer`}>
@@ -150,7 +188,6 @@ export default function TodoTask({
 					</div>
 				</div>
 			</div>
-			{/* Subtasks Toggle and List */}
 			{subtasks.length > 0 && (
 				<div
 					className={`${
@@ -168,29 +205,36 @@ export default function TodoTask({
 							}`}
 						/>
 					</div>
-					<motion.div
-						className={`overflow-hidden `}
-						initial={false}
-						animate={subtasksVisible ? 'open' : 'collapsed'}
-						variants={variants}>
-						{subtaskStates.map((subtask, idx) => (
-							<TodoSubtask
-								key={idx}
-								name={subtask.name}
-								completed={subtask.completed}
-								onToggle={() => toggleSubtask(idx)}
-							/>
-						))}
-					</motion.div>
+					<AnimatePresence initial={false}>
+						{subtasksVisible && (
+							<motion.div
+								className={`overflow-hidden `}
+								initial='collapsed'
+								animate='open'
+								exit='collapsed'
+								variants={variants}
+								transition={{ duration: 0.4, ease: 'easeInOut' }}>
+								<Reorder.Group
+									axis='y'
+									values={subtaskStates}
+									onReorder={setSubtaskStates}>
+									{subtaskStates.map((subtask, idx) => (
+										<Reorder.Item
+											key={subtask.name}
+											value={subtask}>
+											<TodoSubtask
+												name={subtask.name}
+												completed={subtask.completed}
+												toggleSubtask={() => toggleSubtask(idx)}
+											/>
+										</Reorder.Item>
+									))}
+								</Reorder.Group>
+							</motion.div>
+						)}
+					</AnimatePresence>
 				</div>
 			)}
 		</div>
 	);
-}
-
-function getBackgroundColor(index, isComplete) {
-	if (isComplete) {
-		return index % 2 === 0 ? 'rgba(134, 239, 172, 0.6)' : 'rgba(134, 239, 172, 0.4)';
-	}
-	return index % 2 === 0 ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.4)';
 }

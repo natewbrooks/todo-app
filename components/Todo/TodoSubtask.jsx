@@ -9,7 +9,10 @@ function TodoSubtask({ name, completed, toggleSubtask }) {
 			<Checkbox
 				size={6}
 				checked={completed}
-				clickHandler={() => setChecked(!checked)}
+				clickHandler={() => {
+					setChecked(!checked);
+					toggleSubtask();
+				}}
 			/>
 			<span className={`text-[10px] subtext ${checked ? 'line-through' : ''}`}>{name}</span>
 		</div>

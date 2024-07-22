@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import TodoCategory from '../components/Todo/TodoCategory';
-import SelectActionModal from '../components/SelectActionModal';
+import SelectActionModal from '../components/UI/SelectActionModal';
 import Checkbox from '@/components/Widgets/Checkbox';
 import { BiSolidDownArrow } from 'react-icons/bi';
+import { LayoutGroup } from 'framer-motion';
+import { FaMagnifyingGlass } from 'react-icons/fa6';
+import { FaFilter } from 'react-icons/fa';
 
 export default function Todo() {
 	const [completeShown, setComplete] = useState(false);
@@ -11,7 +14,7 @@ export default function Todo() {
 	const [taskSort, setTaskSort] = useState('priorityDate'); // 'priorityDate' or 'alphabetical' or 'priorityAlphabetical'  or 'priority' or 'dueDate'
 	const [pinnedCategories, setPinnedCategories] = useState([]);
 	const [sortedCategories, setSortedCategories] = useState([]);
-	const [filterMethod, setFilterMethod] = useState('week'); // 'week', 'month' or 'all'
+	const [filterMethod, setFilterMethod] = useState('week'); // 'week', 'month' or 'all' or 'completed'
 	const [dropdownActive, setDropdownActive] = useState(false);
 
 	const exampleCategories = [
@@ -57,6 +60,20 @@ export default function Todo() {
 						{ name: 'Prepare study materials', completed: false },
 					],
 				},
+				{
+					name: 'Project on Vector Fields',
+					assignDate: '08/15/24',
+					dueDate: '08/30/24',
+					dueTime: '4:00 PM',
+					completedDate: null,
+					priority: 1,
+					description:
+						'Complete the assigned project on vector fields, including a report and presentation.',
+					subtasks: [
+						{ name: 'Write report', completed: false },
+						{ name: 'Create presentation', completed: false },
+					],
+				},
 			],
 		},
 		{
@@ -90,6 +107,19 @@ export default function Todo() {
 					description: 'Prepare a 20-minute presentation on how AI is transforming healthcare.',
 					subtasks: [],
 				},
+				{
+					name: 'AI Programming Assignment',
+					assignDate: '08/20/24',
+					dueDate: '09/10/24',
+					dueTime: '3:00 PM',
+					completedDate: null,
+					priority: 2,
+					description: 'Complete the programming assignment on machine learning algorithms.',
+					subtasks: [
+						{ name: 'Implement algorithm', completed: false },
+						{ name: 'Test and debug', completed: false },
+					],
+				},
 			],
 		},
 		{
@@ -121,6 +151,20 @@ export default function Todo() {
 					subtasks: [
 						{ name: 'Prepare slides', completed: false },
 						{ name: 'Practice speech', completed: false },
+					],
+				},
+				{
+					name: 'Cybersecurity Case Study',
+					assignDate: '08/18/24',
+					dueDate: '08/29/24',
+					dueTime: '11:00 AM',
+					completedDate: null,
+					priority: 1,
+					description:
+						'Analyze a case study on a recent cybersecurity breach and present findings.',
+					subtasks: [
+						{ name: 'Research case study', completed: false },
+						{ name: 'Prepare report', completed: false },
 					],
 				},
 			],
@@ -164,6 +208,20 @@ export default function Todo() {
 						{ name: 'Article by Doe et al.', completed: false },
 					],
 				},
+				{
+					name: 'Policy Analysis Report',
+					assignDate: '08/01/24',
+					dueDate: '08/25/24',
+					dueTime: '3:00 PM',
+					completedDate: null,
+					priority: 2,
+					description: 'Write a detailed analysis of a selected government policy.',
+					subtasks: [
+						{ name: 'Select policy', completed: false },
+						{ name: 'Research policy', completed: false },
+						{ name: 'Write report', completed: false },
+					],
+				},
 			],
 		},
 		{
@@ -183,6 +241,19 @@ export default function Todo() {
 						{ name: 'Complete coding phase', completed: false },
 						{ name: 'Write project documentation', completed: false },
 						{ name: 'Create presentation slides', completed: false },
+					],
+				},
+				{
+					name: 'Midterm Exam Preparation',
+					assignDate: '08/05/24',
+					dueDate: '08/15/24',
+					dueTime: '10:00 AM',
+					completedDate: null,
+					priority: 2,
+					description: 'Study all materials covered in the first half of the course.',
+					subtasks: [
+						{ name: 'Review lecture notes', completed: false },
+						{ name: 'Practice problem sets', completed: false },
 					],
 				},
 			],
@@ -246,8 +317,8 @@ export default function Todo() {
 				className={`${
 					taskModalActive ? 'blur' : ''
 				} w-full h-full flex flex-col items-center overflow-auto px-0 lg:px-20`}>
-				<div className='flex flex-col w-full max-w-[80%] lg:max-w-[40%] space-x-2 items-center'>
-					<div className='flex space-x-1 py-2 translate-y-1 items-center w-full'>
+				<div className='flex flex-col w-full max-w-[80%] lg:max-w-[40%]  py-2'>
+					<div className='flex space-x-1 items-center w-full'>
 						<div className='rounded-sm bg-zinc-700 h-[1px] w-full'></div>
 						<div
 							className={`flex px-4 space-x-2 items-center cursor-pointer`}
@@ -265,8 +336,29 @@ export default function Todo() {
 						</div>
 						<div className='rounded-sm bg-zinc-700 h-[1px] w-full'></div>
 					</div>
+					<div className={`flex w-full justify-between items-center`}>
+						<div className='w-fit flex'>
+							<div className='relative flex items-center overflow-hidden border-2 border-zinc-800 rounded-md bg-zinc-800'>
+								<div className={`absolute left-0 h-full px-1 flex items-center bg-zinc-200`}>
+									<FaMagnifyingGlass
+										size={12}
+										className=' text-zinc-800 bg-zinc-200 '
+									/>
+								</div>
+								<input
+									className='bg-zinc-800 text-zinc-200 pl-8 pr-4 py-1  w-full'
+									type='text'
+									placeholder='Search...'
+								/>
+							</div>
+						</div>
+
+						{/* <div className={`w-fit`}>
+							<FaFilter />
+						</div> */}
+					</div>
 					{dropdownActive && (
-						<div className='absolute top-full mt-1 bg-white shadow-lg rounded-md z-10'>
+						<div className='absolute top-full bg-white shadow-lg rounded-md z-10'>
 							<div
 								className='p-2'
 								onClick={() => handleFilterSelection('week')}>
@@ -287,18 +379,20 @@ export default function Todo() {
 				</div>
 
 				<div className={`w-full h-full flex flex-col -space-y-4 xl:max-w-[80%]`}>
-					{sortedCategories.map((category, idx) => (
-						<TodoCategory
-							key={idx}
-							name={category.name}
-							tasks={category.tasks}
-							bgColor={category.bgColor}
-							outlineColor={category.outlineColor}
-							pin={() => togglePinCategory(category.name)}
-							isPinned={pinnedCategories.includes(category.name)}
-							taskSort={taskSort}
-						/>
-					))}
+					<LayoutGroup>
+						{sortedCategories.map((category, idx) => (
+							<TodoCategory
+								key={idx}
+								name={category.name}
+								tasks={category.tasks}
+								bgColor={category.bgColor}
+								outlineColor={category.outlineColor}
+								pin={() => togglePinCategory(category.name)}
+								isPinned={pinnedCategories.includes(category.name)}
+								taskSort={taskSort}
+							/>
+						))}
+					</LayoutGroup>
 				</div>
 			</div>
 			{taskModalActive && <SelectActionModal selectModalActive={setTaskModalActive} />}

@@ -1,6 +1,6 @@
-import Navbar from './components/Navbar';
+import Navbar from './components/UI/Nav/Navbar';
 import { useRef, useEffect, useState, useCallback } from 'react';
-import Topbar from './components/Topbar';
+import Topbar from './components/UI/Topbar';
 
 export default function Layout({ children }) {
 	const navRef = useRef(null);
@@ -45,11 +45,11 @@ export default function Layout({ children }) {
 			{!isMobileDevice && <Navbar navRef={navRef} />}
 			<div className={`flex flex-col`}>
 				<Topbar topbarRef={topbarRef} />
-				<div
+				<article
 					style={{ width: sectionDimensions[0], height: sectionDimensions[1] }}
 					className={`h-full xs:w-fit lg:w-full flex flex-row`}>
 					{children}
-				</div>
+				</article>
 				{isMobileDevice && <Navbar navRef={navRef} />}
 			</div>
 		</div>

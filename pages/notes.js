@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BiSolidDownArrow, BiSolidStar } from 'react-icons/bi';
 import TodoCategory from '../components/Todo/TodoCategory';
-import SelectActionModal from '../components/SelectActionModal';
+import SelectActionModal from '../components/UI/SelectActionModal';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 

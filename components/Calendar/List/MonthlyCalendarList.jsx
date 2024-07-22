@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import MonthlyCalendarListDay from '../List/MonthlyCalendarListDay';
 import CalendarOptions from '../CalendarOptions';
-import SelectActionModal from '@/components/SelectActionModal';
+import SelectActionModal from '@/components/UI/SelectActionModal';
 
 export default function MonthlyCalendarList({
 	previousMonthsDays,

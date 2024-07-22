@@ -3,7 +3,7 @@ import MonthlyCalendarDay from './Grid/MonthlyCalendarGridDay';
 import MonthlyCalendarGrid from './Grid/MonthlyCalendarGrid';
 import MonthlyCalendarList from './List/MonthlyCalendarList';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
-import SelectActionModal from '../SelectActionModal';
+import SelectActionModal from '../UI/SelectActionModal';
 import CalendarTaskbar from './CalendarTaskbar';
 import CalendarOptions from './CalendarOptions';
 
